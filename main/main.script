@@ -1,11 +1,27 @@
 local Controls = require "scripts.controls"
-
+local Road = require "scripts.road"
 
 
 function init(self)
 	print("Self-driving car simulation started")
 	msg.post(".", "acquire_input_focus")
 	self.controls = Controls.new("KEYS")
+-- 	self.road = Road.new(
+-- 	400,   -- x
+-- 	300,   -- width
+-- 	3      -- lanes
+-- 	)
+-- 
+-- 	print(
+-- 	string.format(
+-- 		"ROAD: center=%f left=%f right=%f lanes=%d",
+-- 			self.road.x,
+-- 			self.road.left,
+-- 			self.road.right,
+-- 			self.road.lane_count
+-- 		)
+-- 	)
+
 end
 
 function final(self)

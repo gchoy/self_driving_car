@@ -49,14 +49,7 @@ function update(self, dt)
 		)
 	)    
 
-	print(
-	"speed:",
-	self.car.speed,
-	"x:",
-	self.car.x,
-	"y:",
-	self.car.y
-	)	
+	
 
 	print(
 	"mode:",

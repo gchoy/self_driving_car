@@ -32,3 +32,11 @@ embedded_instances {
   "}\n"
   ""
 }
+embedded_instances {
+  id: "road"
+  data: "components {\n"
+  "  id: \"road\"\n"
+  "  component: \"/main/road.script\"\n"
+  "}\n"
+  ""
+}
