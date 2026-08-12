@@ -1,10 +1,55 @@
 local Road = require "scripts.road"
 
+local ROAD_TOP = 1000
+local ROAD_BOTTOM = -1000
+local DASH_LENGTH = 40
+local GAP_LENGTH = 30
+
+
+local function draw_line(x1, y1, x2, y2)
+	msg.post(
+	"@render:",
+	"draw_line",
+	{
+		start_point = vmath.vector3(x1, y1, 0),
+		end_point = vmath.vector3(x2, y2, 0),
+		color = vmath.vector4(1, 1, 1, 1)
+	}
+)
+end
+
+
 local function get_lane_x(road, lane)
 	local lane_width = road.width / road.lane_count
 
 	return road.left + lane_width * lane
 end
+
+
+local function draw_dashed_line(x, y_bottom, y_top)
+
+	local y = y_bottom
+
+	while y < y_top do
+
+		local dash_end =
+		math.min(
+		y + DASH_LENGTH,
+		y_top
+		)
+
+		draw_line(
+			x,
+			y,
+			x,
+			dash_end
+		)
+
+		y =
+			dash_end + GAP_LENGTH
+	end
+end
+
 
 function init(self)
 	print("=== ROAD SCRIPT STARTED ===")
@@ -50,7 +95,39 @@ function final(self)
 end
 
 function update(self, dt)
-	
+
+	-- left border
+	draw_line(
+	self.road.left,
+	ROAD_BOTTOM,
+	self.road.left,
+	ROAD_TOP
+	) 
+
+	-- right border
+	draw_line(
+	self.road.right,
+	ROAD_BOTTOM,
+	self.road.right,
+	ROAD_TOP
+	)
+
+	-- Lane dividers
+	for lane = 1, self.road.lane_count - 1 do
+
+		local x = get_lane_x(
+			self.road,
+			lane
+		)
+
+		draw_dashed_line(
+			x,
+			ROAD_BOTTOM,
+			ROAD_TOP
+		)
+	end
+
+
 end
 
 function late_update(self, dt)
