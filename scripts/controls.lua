@@ -1,18 +1,20 @@
--- Put functions in this file to use them in several other scripts.
--- To get access to the functions, you need to put:
--- require "my_directory.my_file"
--- in any script using the functions.
 
 local M = {}
 
 function M.new(control_type)
-	return {
+	local controls = {
 		forward = false,
 		left = false,
 		right = false,
 		reverse = false,
 		type = control_type or "KEYS"
 	}
+
+	if controls.type == "DUMMY" then
+		controls.forward = true
+	end
+
+	return controls
 end
 
 function M.apply_input(controls, action_id, action)

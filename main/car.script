@@ -19,7 +19,7 @@ function init(self)
 	100,
 	30,
 	50,
-	"KEYS"
+	"DUMMY"
 	)
 
 	print("CAR INITIALIZED")
@@ -57,6 +57,18 @@ function update(self, dt)
 	self.car.y
 	)	
 
+	print(
+	"mode:",
+	self.car.controls.type,
+	"forward:",
+	self.car.controls.forward,
+	"left:",
+	self.car.controls.left,
+	"right:",
+	self.car.controls.right,
+	"reverse:",
+	self.car.controls.reverse
+)
 
 
 end
