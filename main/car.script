@@ -8,6 +8,7 @@ function init(self)
 	print("CAR SCRIPT INITIALIZED")
 	
 	local position = go.get_position()
+	local CONTROL_MODE = "KEYS"
 
 	self.x = position.x
 	self.y = position.y
@@ -19,7 +20,7 @@ function init(self)
 	100,
 	30,
 	50,
-	"DUMMY"
+	CONTROL_MODE
 	)
 
 	print("CAR INITIALIZED")
