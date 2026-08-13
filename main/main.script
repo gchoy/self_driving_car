@@ -1,27 +1,51 @@
 local Controls = require "scripts.controls"
 local Road = require "scripts.road"
+local Geometry = require "scripts.geometry" 
+
+--test of line intersection
+
+
+-- local function test_polygon_intersection()
+-- 
+-- 	local polygon_a = {
+-- 		vmath.vector3(0, 0, 0),
+-- 		vmath.vector3(100, 0, 0),
+-- 		vmath.vector3(100, 100, 0),
+-- 		vmath.vector3(0, 100, 0)
+-- 	}
+-- 
+-- 	local polygon_b = {
+-- 		vmath.vector3(50, 50, 0),
+-- 		vmath.vector3(150, 50, 0),
+-- 		vmath.vector3(150, 150, 0),
+-- 		vmath.vector3(50, 150, 0)
+-- 	}
+-- 
+-- 	local polygon_c = {
+-- 		vmath.vector3(200, 200, 0),
+-- 		vmath.vector3(300, 200, 0),
+-- 		vmath.vector3(300, 300, 0),
+-- 		vmath.vector3(200, 300, 0)
+-- 	}
+-- 
+-- 	local result = Geometry.polys_intersect(polygon_a, polygon_c)
+-- 	print("result from intersection", result)
+-- 
+-- 	if result then
+-- 		print("POLY INTERSECTION:")
+-- 	else
+-- 		print("NO POLY INTERSECTION")
+-- 	end
+-- end
+
 
 
 function init(self)
 	print("Self-driving car simulation started")
 	msg.post(".", "acquire_input_focus")
 	self.controls = Controls.new("KEYS")
--- 	self.road = Road.new(
--- 	400,   -- x
--- 	300,   -- width
--- 	3      -- lanes
--- 	)
--- 
--- 	print(
--- 	string.format(
--- 		"ROAD: center=%f left=%f right=%f lanes=%d",
--- 			self.road.x,
--- 			self.road.left,
--- 			self.road.right,
--- 			self.road.lane_count
--- 		)
--- 	)
-
+	-- test_polygon_intersection()
+	
 end
 
 function final(self)
@@ -59,7 +83,5 @@ function on_input(self, action_id, action)
 end
 
 function on_reload(self)
-	-- Add reload-handling code here
-	-- Learn more: https://defold.com/manuals/hot-reload/
-	-- Remove this function if not needed
+	
 end

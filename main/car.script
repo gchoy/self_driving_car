@@ -2,6 +2,41 @@ local Car = require "scripts.car"
 local Controls = require "scripts.controls"
 
 
+local function draw_polygon(polygon)
+
+	for i = 1, #polygon do
+
+		local next_i =
+		(i % #polygon) + 1
+
+		local a = polygon[i]
+		local b = polygon[next_i]
+
+		msg.post(
+		"@render:",
+		"draw_line",
+		{
+			start_point =
+			vmath.vector3(
+			a.x,
+			a.y,
+			0
+		),
+
+		end_point =
+		vmath.vector3(
+		b.x,
+		b.y,
+		0
+	),
+
+	color =
+	vmath.vector4(1, 0, 0, 1)
+}
+)
+end
+end
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
@@ -16,14 +51,31 @@ function init(self)
 	self.angle = 0
 
 	self.car = Car.new(
-	100,
+	300,
 	100,
 	30,
 	50,
 	CONTROL_MODE
 	)
 
+	self.car.polygon = Car.create_polygon(self.car)
+
 	print("CAR INITIALIZED")
+	print("CAR POLYGON CREATED")
+	
+-- 	for i, point in ipairs(self.car.polygon) do
+-- 
+-- 		print(
+-- 		"CAR POINT",
+-- 		i,
+-- 		point.x,
+-- 		point.y
+-- 	)
+-- 
+-- 	end 
+
+
+
 end
 
 function final(self)
@@ -34,7 +86,24 @@ end
 
 function update(self, dt)
 	Car.move(self.car)
+	self.car.polygon = Car.create_polygon(self.car) 
+	print("CAR:", self.car.x, self.car.y)
+	print(
+	"P1:",
+	self.car.polygon[1].x,
+	self.car.polygon[1].y
+	)
 
+	if self.debug then
+		draw_polygon(self.car.polygon)
+	end
+
+	-- print(
+	-- "P2:",
+	-- self.car.polygon[2].x,
+	-- self.car.polygon[2].y
+	-- )
+	
 	go.set_position(
 	vmath.vector3(
 	self.car.x,
@@ -49,7 +118,11 @@ function update(self, dt)
 		)
 	)    
 
-	
+	print(
+	"CAR POSITION:",
+	self.car.x,
+	self.car.y
+	)
 
 	print(
 	"mode:",
