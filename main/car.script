@@ -1,5 +1,6 @@
 local Car = require "scripts.car"
 local Controls = require "scripts.controls"
+local Sensors = require "scripts.sensors"
 
 
 local function draw_polygon(polygon)
@@ -49,20 +50,41 @@ function init(self)
 	self.y = position.y
 	self.speed = 0
 	self.angle = 0
-
+	
 	self.car = Car.new(
 	300,
 	100,
 	30,
 	50,
 	CONTROL_MODE
-	)
+	) 
+
+	self.sensor = Sensors.new(self.car)
 
 	self.debug = true
 	self.car.polygon = Car.create_polygon(self.car)
 
 	print("CAR INITIALIZED")
 	print("CAR POLYGON CREATED")
+
+	print(
+	"SENSOR CREATED"
+)
+
+print(
+"RAY COUNT:",
+self.sensor.ray_count
+)
+
+print(
+"RAY LENGTH:",
+self.sensor.ray_length
+)
+
+print(
+"RAY SPREAD:",
+self.sensor.ray_spread
+)
 	
 end
 
@@ -75,9 +97,64 @@ function update(self, dt)
 		Car.move(self.car)
 		self.car.polygon = Car.create_polygon(self.car) 
 
-		print("ROAD BORDERS:",self.road_borders)
+		--print("ROAD BORDERS:",self.road_borders)
+		Sensors.cast_rays(self.sensor)
+		
+		
+		Sensors.update(
+		self.sensor,
+		self.road_borders,
+		{}
+		)
+		
+		if self.debug then
+			Sensors.draw(self.sensor)
+		end
 
-		print ("DAMAGE", self.car.damaged)
+		for i, reading in ipairs(self.sensor.readings) do
+
+			if reading then
+
+				print(
+				"SENSOR",
+				i,
+				"DETECTED",
+				"X:",
+				reading.x,
+				"Y:",
+				reading.y,
+				"OFFSET:",
+				reading.offset
+			)
+
+		else
+
+			print(
+			"SENSOR",
+			i,
+			"NO DETECTION"
+		)
+
+	end
+
+end
+
+		for i, ray in ipairs(self.sensor.rays) do
+
+			print(
+			"RAY",
+			i,
+			"START:",
+			ray[1].x,
+			ray[1].y,
+			"END:",
+			ray[2].x,
+			ray[2].y
+			)
+
+		end
+		
+		print("DAMAGE", self.car.damaged)
 		if self.road_borders then
 			self.car.damaged = 
 			Car.assess_damage(
@@ -93,7 +170,7 @@ function update(self, dt)
 		draw_polygon(self.car.polygon)
 	end
 
-		
+	--Sensors.draw()	
 	go.set_position(
 	vmath.vector3(
 	self.car.x,
