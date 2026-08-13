@@ -58,52 +58,42 @@ function init(self)
 	CONTROL_MODE
 	)
 
+	self.debug = true
 	self.car.polygon = Car.create_polygon(self.car)
 
 	print("CAR INITIALIZED")
 	print("CAR POLYGON CREATED")
 	
--- 	for i, point in ipairs(self.car.polygon) do
--- 
--- 		print(
--- 		"CAR POINT",
--- 		i,
--- 		point.x,
--- 		point.y
--- 	)
--- 
--- 	end 
-
-
-
 end
 
 function final(self)
-	-- Add finalization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
 end
 
 function update(self, dt)
-	Car.move(self.car)
-	self.car.polygon = Car.create_polygon(self.car) 
-	print("CAR:", self.car.x, self.car.y)
-	print(
-	"P1:",
-	self.car.polygon[1].x,
-	self.car.polygon[1].y
-	)
+	if not self.car.damaged then
+		
+		Car.move(self.car)
+		self.car.polygon = Car.create_polygon(self.car) 
+
+		print("ROAD BORDERS:",self.road_borders)
+
+		print ("DAMAGE", self.car.damaged)
+		if self.road_borders then
+			self.car.damaged = 
+			Car.assess_damage(
+			self.car,
+			self.road_borders,
+			{}
+			)
+			print("DAMAGE",self.car.damaged)
+		end
+	end 
 
 	if self.debug then
 		draw_polygon(self.car.polygon)
 	end
 
-	-- print(
-	-- "P2:",
-	-- self.car.polygon[2].x,
-	-- self.car.polygon[2].y
-	-- )
-	
+		
 	go.set_position(
 	vmath.vector3(
 	self.car.x,
@@ -118,35 +108,50 @@ function update(self, dt)
 		)
 	)    
 
-	print(
-	"CAR POSITION:",
-	self.car.x,
-	self.car.y
-	)
-
-	print(
-	"mode:",
-	self.car.controls.type,
-	"forward:",
-	self.car.controls.forward,
-	"left:",
-	self.car.controls.left,
-	"right:",
-	self.car.controls.right,
-	"reverse:",
-	self.car.controls.reverse
-)
-
-
 end
 
-function late_update(self, dt)
-end
-
-function fixed_update(self, dt)
-end
 
 function on_message(self, message_id, message, sender)
+
+	if message_id == hash("set_road") then
+
+		self.road_borders = {
+			{
+				vmath.vector3(
+				message.left,
+				-1000,
+				0
+			),
+
+			vmath.vector3(
+			message.left,
+			1000,
+			0
+		)
+	},
+
+	{
+		vmath.vector3(
+		message.right,
+		-1000,
+		0
+	),
+
+	vmath.vector3(
+	message.right,
+	1000,
+	0
+)
+}
+}
+
+print("ROAD BORDERS RECEIVED")
+
+
+end
+
+
+	
 end
 
 function on_input(self, action_id, action)
@@ -154,21 +159,13 @@ function on_input(self, action_id, action)
 		
 
 		if action.pressed then
-			print("Pressed:", action_id)
-
+			
 			Controls.apply_input(
 			self.car.controls,
 			action_id,
 			action
 			)
 
-			print( "FORWARD:", 	self.car.controls.forward)
-
-			print(	"LEFT:",	self.car.controls.left)
-
-			print( "RIGHT:", self.car.controls.right)
-
-			print("REVERSE:", self.car.controls.reverse)
 		end
 
 		if action.released then
@@ -179,15 +176,11 @@ function on_input(self, action_id, action)
 			action_id
 			)
 
-			print(
-			"RELEASED - FORWARD:",
-			self.car.controls.forward
-			)
+			
 		end 
 
 		
 	
 end
 
-function on_reload(self)
-end
+

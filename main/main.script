@@ -42,10 +42,28 @@ local Geometry = require "scripts.geometry"
 
 function init(self)
 	print("Self-driving car simulation started")
+
 	msg.post(".", "acquire_input_focus")
+
 	self.controls = Controls.new("KEYS")
 	-- test_polygon_intersection()
-	
+
+
+	self.road =
+		Road.new(
+			480,
+			540,
+			3
+		)
+
+	msg.post(
+		"/car",
+		"set_road",
+		{
+			left = self.road.left,
+			right = self.road.right
+		}
+	)
 end
 
 function final(self)

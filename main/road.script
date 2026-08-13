@@ -60,6 +60,36 @@ function init(self)
 		3
 	)
 
+	self.road_borders = {
+		{
+			vmath.vector3(
+			self.road.left,
+			ROAD_BOTTOM,
+			0
+		),
+
+			vmath.vector3(
+			self.road.left,
+			ROAD_TOP,
+			0
+			)
+		},	
+
+		{
+			vmath.vector3(
+			self.road.right,
+			ROAD_BOTTOM,
+			0
+		),
+
+		vmath.vector3(
+		self.road.right,
+		ROAD_TOP,
+		0
+		)
+		}
+	}	
+
 	print("Road X:", self.road.x)
 	print("Road width:", self.road.width)
 	print("Lane count:", self.road.lane_count)
@@ -76,15 +106,15 @@ function init(self)
 		local x = get_lane_x(
 		self.road,
 		lane
-	)
+		)
 
-	print(
-	"Divider",
-	lane,
-	"X:",
-	x
-)
-end
+		print(
+			"Divider",
+			lane,
+			"X:",
+			x
+		)
+	end
 	
 end
 
