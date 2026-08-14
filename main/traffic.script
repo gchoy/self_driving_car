@@ -1,0 +1,25 @@
+local Car = require "scripts.car"
+
+function init(self)
+
+	print("TRAFFIC SCRIPT INITIALIZED")
+	local p = go.get_position()
+
+	self.car = Car.new( p.x, p.y, 30, 50, "DUMMY",2)
+	go.set("/traffic#sprite", "tint", vmath.vector4(1, 0, 0, 1))
+	
+end
+
+function update(self, dt)
+	Car.move(self.car)
+
+	self.car.polygon = Car.create_polygon(self.car)
+	go.set_position(vmath.vector3(self.car.x, self.car.y,0))
+	go.set_rotation(vmath.quat_rotation_z(-self.car.angle))
+end
+
+
+function on_message(self, message_id, message, sender)
+	
+end
+
