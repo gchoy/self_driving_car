@@ -128,7 +128,7 @@ function update(self, dt)
 				reading.offset
 			)
 
-		else
+			else
 
 			print(
 			"SENSOR",
@@ -136,24 +136,24 @@ function update(self, dt)
 			"NO DETECTION"
 		)
 
-	end
-
-end
-
-		for i, ray in ipairs(self.sensor.rays) do
-
-			print(
-			"RAY",
-			i,
-			"START:",
-			ray[1].x,
-			ray[1].y,
-			"END:",
-			ray[2].x,
-			ray[2].y
-			)
+			end
 
 		end
+
+-- 		for i, ray in ipairs(self.sensor.rays) do
+-- 
+-- 			print(
+-- 			"RAY",
+-- 			i,
+-- 			"START:",
+-- 			ray[1].x,
+-- 			ray[1].y,
+-- 			"END:",
+-- 			ray[2].x,
+-- 			ray[2].y
+-- 			)
+-- 
+-- 		end
 		
 		print("DAMAGE", self.car.damaged)
 		if self.road_borders then
