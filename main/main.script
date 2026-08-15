@@ -64,22 +64,16 @@ function init(self)
 			right = self.road.right
 		}
 	)
-end
 
-function final(self)
+	local x = Road.get_lane_center(self.road,0)
+	print("LOCAL X", x)
+	self.traffic_id = factory.create("/traffic#factory", vmath.vector3(x,300,0))
+	print("TRAFFIC SPAWNED:", self.traffic_id)
+	
 
-end
-
-function update(self, dt)
-end
-
-function late_update(self, dt)
-
-end
-
-function fixed_update(self, dt)
 	
 end
+
 
 function on_message(self, message_id, message, sender)
 

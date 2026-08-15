@@ -1,6 +1,7 @@
 local Car = require "scripts.car"
 local Controls = require "scripts.controls"
 local Sensors = require "scripts.sensors"
+local TrafficManager = require "scripts.traffic_manager"
 
 
 local function draw_polygon(polygon)
@@ -100,11 +101,11 @@ function update(self, dt)
 		--print("ROAD BORDERS:",self.road_borders)
 		Sensors.cast_rays(self.sensor)
 		
-		
+		print("TRAFFIC COUNT:",	#TrafficManager.get_all())
 		Sensors.update(
 		self.sensor,
 		self.road_borders,
-		{}
+		TrafficManager.get_all()
 		)
 		
 		if self.debug then
