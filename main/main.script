@@ -70,6 +70,7 @@ function init(self)
 	self.traffic_id = factory.create("/traffic#factory", vmath.vector3(x,300,0))
 	print("TRAFFIC SPAWNED:", self.traffic_id)
 	
+	
 
 	
 end

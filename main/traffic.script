@@ -18,22 +18,14 @@ function init(self)
 end
 
 function update(self, dt)
-	Car.move(self.car)
+	--Car.move(self.car)
 
 	self.car.polygon = Car.create_polygon(self.car)
-	-- print(
-	-- "TRAFFIC:",
-	-- self.car.x,
-	-- self.car.y,
-	-- "POLYGON:",
-	-- self.car.polygon
-	-- )
+	
 
-	print(
-	"TRAFFIC POLYGON:",
-	self.car.polygon[1].x,
-	self.car.polygon[1].y
-	)
+	
+
+	
 	go.set_position(vmath.vector3(self.car.x, self.car.y,0))
 	go.set_rotation(vmath.quat_rotation_z(-self.car.angle))
 end

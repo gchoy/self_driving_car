@@ -92,102 +92,243 @@ end
 function final(self)
 end
 
-function update(self, dt)
-	if not self.car.damaged then
-		
-		Car.move(self.car)
-		self.car.polygon = Car.create_polygon(self.car) 
-
-		--print("ROAD BORDERS:",self.road_borders)
-		Sensors.cast_rays(self.sensor)
-		
-		print("TRAFFIC COUNT:",	#TrafficManager.get_all())
-		Sensors.update(
-		self.sensor,
-		self.road_borders,
-		TrafficManager.get_all()
-		)
-		
-		if self.debug then
-			Sensors.draw(self.sensor)
-		end
-
-		for i, reading in ipairs(self.sensor.readings) do
-
-			if reading then
-
-				print(
-				"SENSOR",
-				i,
-				"DETECTED",
-				"X:",
-				reading.x,
-				"Y:",
-				reading.y,
-				"OFFSET:",
-				reading.offset
-			)
-
-			else
-
-			print(
-			"SENSOR",
-			i,
-			"NO DETECTION"
-		)
-
-			end
-
-		end
-
--- 		for i, ray in ipairs(self.sensor.rays) do
+-- function update(self, dt)
+-- 	if not self.car.damaged then
+-- 		
+-- 		Car.move(self.car)
+-- 		self.car.polygon = Car.create_polygon(self.car) 
 -- 
--- 			print(
--- 			"RAY",
--- 			i,
--- 			"START:",
--- 			ray[1].x,
--- 			ray[1].y,
--- 			"END:",
--- 			ray[2].x,
--- 			ray[2].y
+-- 		--print("ROAD BORDERS:",self.road_borders)
+-- 		Sensors.cast_rays(self.sensor)
+-- 		
+-- 		print("TRAFFIC COUNT:",	#TrafficManager.get_all())
+-- 		Sensors.update(
+-- 		self.sensor,
+-- 		self.road_borders,
+-- 		TrafficManager.get_all()
+-- 		)
+-- 		
+-- 		if self.debug then
+-- 			Sensors.draw(self.sensor)
+-- 		end
+-- 
+-- 		for i, reading in ipairs(self.sensor.readings) do
+-- 
+-- 			if reading then
+-- 
+-- 				print(
+-- 				"SENSOR",
+-- 				i,
+-- 				"DETECTED",
+-- 				"X:",
+-- 				reading.x,
+-- 				"Y:",
+-- 				reading.y,
+-- 				"OFFSET:",
+-- 				reading.offset
 -- 			)
 -- 
+-- 			else
+-- 
+-- 			print(
+-- 			"SENSOR",
+-- 			i,
+-- 			"NO DETECTION"
+-- 		)
+-- 
+-- 			end
+-- 
 -- 		end
-		
-		print("DAMAGE", self.car.damaged)
-		if self.road_borders then
-			self.car.damaged = 
-			Car.assess_damage(
-			self.car,
-			self.road_borders,
-			{}
-			)
-			print("DAMAGE",self.car.damaged)
-		end
-	end 
+-- 
+-- -- 		for i, ray in ipairs(self.sensor.rays) do
+-- -- 
+-- -- 			print(
+-- -- 			"RAY",
+-- -- 			i,
+-- -- 			"START:",
+-- -- 			ray[1].x,
+-- -- 			ray[1].y,
+-- -- 			"END:",
+-- -- 			ray[2].x,
+-- -- 			ray[2].y
+-- -- 			)
+-- -- 
+-- -- 		end
+-- 		
+-- 		print("DAMAGE", self.car.damaged)
+-- 		if self.road_borders then
+-- 			self.car.damaged = 
+-- 			Car.assess_damage(
+-- 			self.car,
+-- 			self.road_borders,
+-- 			{}
+-- 			)
+-- 			print("DAMAGE",self.car.damaged)
+-- 		end
+-- 	end 
+-- 
+-- 	if self.debug then
+-- 		draw_polygon(self.car.polygon)
+-- 	end 
+-- 
+-- 	-- 6. Update visual position
+-- 
+-- 	--Sensors.draw()	
+-- 	go.set_position(
+-- 	vmath.vector3(
+-- 	self.car.x,
+-- 	self.car.y,
+-- 	0
+-- 		)
+-- 	)
+-- 
+-- 	go.set_rotation(
+-- 	vmath.quat_rotation_z(
+-- 	-self.car.angle
+-- 		)
+-- 	)    
+-- 
+-- end
 
-	if self.debug then
-		draw_polygon(self.car.polygon)
+function update(self, dt)
+
+	--------------------------------------------------
+	-- 1. Move the player
+	--------------------------------------------------
+
+	if not self.car.damaged then
+		Car.move(self.car)
 	end
 
-	--Sensors.draw()	
-	go.set_position(
-	vmath.vector3(
-	self.car.x,
-	self.car.y,
-	0
-		)
-	)
 
-	go.set_rotation(
-	vmath.quat_rotation_z(
-	-self.car.angle
-		)
-	)    
+	--------------------------------------------------
+	-- 2. Update player polygon
+	--------------------------------------------------
+
+	self.car.polygon =
+	Car.create_polygon(self.car)
+
+	
+
+	--------------------------------------------------
+	-- 3. Update sensors
+	--------------------------------------------------
+
+	local traffic =
+	TrafficManager.get_all()
+
+	
+
+
+
+Sensors.update(
+self.sensor,
+self.road_borders,
+traffic
+)
+
+
+local ray = self.sensor.rays[3]
+
+print(
+"CENTER RAY:",
+"START",
+ray[1].x,
+ray[1].y,
+"END",
+ray[2].x,
+ray[2].y
+)
+
+--------------------------------------------------
+-- 4. Visualize sensors
+--------------------------------------------------
+
+if self.debug then
+Sensors.draw(self.sensor)
+end
+
+
+--------------------------------------------------
+-- 5. Print sensor readings
+--------------------------------------------------
+for i = 1, self.sensor.ray_count do
+
+	local reading = self.sensor.readings[i]
+
+	if reading then
+		print(
+		"SENSOR",
+		i,
+		"DETECTED",
+		"X:",
+		reading.x,
+		"Y:",
+		reading.y,
+		"OFFSET:",
+		reading.offset
+	)
+else
+	print(
+	"SENSOR",
+	i,
+	"NO DETECTION"
+)
+end
 
 end
 
+
+--------------------------------------------------
+-- 6. Check road collision
+--------------------------------------------------
+
+if not self.car.damaged
+and self.road_borders then
+
+self.car.damaged =
+Car.assess_damage(
+self.car,
+self.road_borders,
+{}
+)
+
+print(
+"DAMAGE:",
+self.car.damaged
+)
+
+end
+
+
+--------------------------------------------------
+-- 7. Draw player polygon
+--------------------------------------------------
+
+if self.debug then
+draw_polygon(self.car.polygon)
+end
+
+
+--------------------------------------------------
+-- 8. Update player visual
+--------------------------------------------------
+
+go.set_position(
+vmath.vector3(
+self.car.x,
+self.car.y,
+0
+)
+)
+
+go.set_rotation(
+vmath.quat_rotation_z(
+-self.car.angle
+)
+)
+
+end
 
 function on_message(self, message_id, message, sender)
 
