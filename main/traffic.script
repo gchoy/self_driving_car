@@ -18,7 +18,7 @@ function init(self)
 end
 
 function update(self, dt)
-	--Car.move(self.car)
+	Car.move(self.car)
 
 	self.car.polygon = Car.create_polygon(self.car)
 	
