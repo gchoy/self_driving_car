@@ -1,26 +1,64 @@
 local Controls = require "scripts.controls"
 local Geometry = require "scripts.geometry"
+local Sensor = require "scripts.sensors"
+local NeuralNetwork = require "scripts.neural_network"
 
 local M = {}
 
+-- function M.new(x, y, width, height, control_type, max_speed)
+--   return {
+--     x = x,
+--     y = y,
+--     width = width,
+--     height = height,
+-- 
+--     speed = 0,
+--     acceleration = 0.2,
+--     max_speed = max_speed or 3,
+--     friction = 0.05,
+--     angle = 0,
+-- 
+--     controls = Controls.new(control_type or "KEYS"),
+--     damaged = false,
+--     polygon = nil
+--   }
+-- end
+
 function M.new(x, y, width, height, control_type, max_speed)
-  return {
-    x = x,
-    y = y,
-    width = width,
-    height = height,
+    local car = {
+        x = x,
+        y = y,
+        width = width,
+        height = height,
 
-    speed = 0,
-    acceleration = 0.2,
-    max_speed = max_speed or 3,
-    friction = 0.05,
-    angle = 0,
+        speed = 0,
+        acceleration = 0.2,
+        max_speed = max_speed or 3,
+        friction = 0.05,
+        angle = 0,
 
-    controls = Controls.new(control_type or "KEYS"),
-    damaged = false,
-    polygon = nil
-  }
+        damaged = false,
+        polygon = nil,
+
+        controls = Controls.new(control_type or "KEYS")
+    }
+
+    if control_type ~= "DUMMY" then
+        car.sensor =
+        Sensor.new(car)
+
+        car.brain = NeuralNetwork.new({
+            car.sensor.ray_count,
+            4
+        })
+
+        car.use_brain =
+            control_type == "AI"
+    end
+
+    return car
 end
+
 
 function M.move(car)
   if car.controls.forward then
@@ -138,6 +176,50 @@ function M.create_polygon(car)
   }
 
 return points
+end 
+
+function M.update(car, road_borders, traffic)
+
+    if not car.damaged then
+        M.move(car)
+
+        car.polygon =
+        M.create_polygon(car)
+
+        car.damaged =
+        M.assess_damage(car, road_borders, traffic)
+    end
+
+    if car.sensor then
+        Sensor.update(car.sensor, road_borders, traffic)
+
+        local offsets = {}
+
+        for i, reading in ipairs(car.sensor.readings) do
+
+            if reading == nil then
+                offsets[i] = 0
+            else
+                offsets[i] = 1 - reading.offset
+            end
+        end
+
+        local outputs = NeuralNetwork.feed_forward(offsets, car.brain)
+
+        if car.use_brain then
+            car.controls.forward =
+                outputs[1] == 1
+
+            car.controls.left =
+                outputs[2] == 1
+
+            car.controls.right =
+                outputs[3] == 1
+
+            car.controls.reverse =
+                outputs[4] == 1
+        end
+    end
 end
 
 function M.assess_damage(car, road_borders, traffic)
