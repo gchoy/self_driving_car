@@ -212,12 +212,75 @@ function M.update(car, road_borders, traffic)
             end
         end
 
-        print("OFFSETS", #offsets)
+        print(
+        "AI INPUTS:",
+        offsets[1],
+        offsets[2],
+        offsets[3],
+        offsets[4],
+        offsets[5]
+        ) 
 
-        local outputs = NeuralNetwork.feed_forward(offsets, car.brain)
+        print(
+        "BIASES:",
+        car.brain.levels[1].biases[1],
+        car.brain.levels[1].biases[2],
+        car.brain.levels[1].biases[3],
+        car.brain.levels[1].biases[4]
+        )
 
-        if car.use_brain then
-            car.controls.forward =
+    print("WEIGHTS:")
+
+    for i = 1, #car.brain.levels[1].weights do
+
+        print(
+        "INPUT",
+        i,
+        "WEIGHTS:",
+        car.brain.levels[1].weights[i][1],
+        car.brain.levels[1].weights[i][2],
+        car.brain.levels[1].weights[i][3],
+        car.brain.levels[1].weights[i][4]
+        )
+
+    end 
+
+    -- local test_inputs = {
+    --     1,
+    --     1,
+    --     1,
+    --     1,
+    --     1
+    -- }
+
+    -- local inputs = {
+    --     0.0,
+    --     0.25,
+    --     0.5,
+    --     0.75,
+    --     1.0
+    -- }
+
+    local outputs = NeuralNetwork.feed_forward(offsets, car.brain)
+    --local outputs = NeuralNetwork.feed_forward(inputs, car.brain)  
+
+        print("AI OUTPUTS:",
+        outputs[1],
+        outputs[2],
+        outputs[3],
+        outputs[4]
+        )
+
+        if car.use_brain then 
+
+            print(
+            "AI CONTROLS:",
+            "F:", car.controls.forward,
+            "L:", car.controls.left,
+            "R:", car.controls.right,
+            "B:", car.controls.reverse
+            )
+            car.controls.forward = 
                 outputs[1] == 1
 
             car.controls.left =
@@ -227,8 +290,20 @@ function M.update(car, road_borders, traffic)
                 outputs[3] == 1
 
             car.controls.reverse =
-                outputs[4] == 1
+            outputs[4] == 1
+
+            print(
+            "AI CONTROLS 2:",
+            "F:", car.controls.forward,
+            "L:", car.controls.left,
+            "R:", car.controls.right,
+            "B:", car.controls.reverse
+        )    
         end
+
+       
+
+            
     end
 end
 

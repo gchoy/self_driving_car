@@ -26,7 +26,9 @@ local function create_level(input_count, output_count)
 	for i = 1, output_count do
 		level.outputs[i] = 0
 		level.biases[i] = random_weight()
-	end
+	end 
+
+	
 
 	return level	
 end 
@@ -47,6 +49,15 @@ for i = 1, #level.outputs do
 		+ level.inputs[j]
 		* level.weights[j][i]
 	end
+
+	print(
+	"NEURON",
+	i,
+	"SUM:",
+	sum,
+	"BIAS:",
+	level.biases[i]
+	)
 
 	if sum > level.biases[i] then
 		level.outputs[i] = 1
