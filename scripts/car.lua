@@ -180,6 +180,8 @@ end
 
 function M.update(car, road_borders, traffic)
 
+    print("=== CAR.UPDATE() ===")
+    
     if not car.damaged then
         M.move(car)
 
@@ -191,18 +193,26 @@ function M.update(car, road_borders, traffic)
     end
 
     if car.sensor then
+
+        print("CAR.UPDATE SENSOR:", #car.sensor.rays)
+
         Sensor.update(car.sensor, road_borders, traffic)
+
+        print("READINGS:", #car.sensor.readings)
 
         local offsets = {}
 
-        for i, reading in ipairs(car.sensor.readings) do
-
+        for i = 1, car.sensor.ray_count do
+            local reading = car.sensor.readings[i]
+                
             if reading == nil then
                 offsets[i] = 0
             else
                 offsets[i] = 1 - reading.offset
             end
         end
+
+        print("OFFSETS", #offsets)
 
         local outputs = NeuralNetwork.feed_forward(offsets, car.brain)
 

@@ -45,13 +45,10 @@ function init(self)
 	print("CAR SCRIPT INITIALIZED")
 	
 	local position = go.get_position()
-	local CONTROL_MODE = "KEYS"
-	--local CONTROL_MODE = "AI"
+	--local CONTROL_MODE = "KEYS"
+	local CONTROL_MODE = "AI"
 	
-	-- self.x = position.x
-	-- self.y = position.y
-	-- self.speed = 0
-	-- self.angle = 0
+	
 	
 	self.car = Car.new(
 	300,
@@ -61,8 +58,11 @@ function init(self)
 	CONTROL_MODE,
 	3
 	) 
-
-	--self.sensor = Sensor.new(self.car)
+	print("AI MODE:", self.car.use_brain)
+	print("BRAIN EXISTS:", 	self.car.brain ~= nil)
+	print("BRAIN LEVELS:", #self.car.brain.levels)
+	print("BRAIN INPUTS:", #self.car.brain.levels[1].inputs)
+	print("BRAIN OUTPUTS:", #self.car.brain.levels[1].outputs)
 
 	self.debug = true
 	self.car.polygon = Car.create_polygon(self.car)
@@ -84,9 +84,6 @@ end
 
 function update(self, dt)
 
-	
-	
-
 	--------------------------------------------------
 	-- 1. Get traffic
 	--------------------------------------------------
@@ -104,26 +101,21 @@ function update(self, dt)
 	traffic
 	)
 
+	print("TRAFFIC COUNT:", #traffic)
 
 
--- Sensor.update(
--- self.sensor,
--- self.road_borders,
--- traffic
--- )
 
+	local ray = self.car.sensor.rays[3]
 
-local ray = self.car.sensor.rays[3]
-
-print(
-"CENTER RAY:",
-"START",
-ray[1].x,
-ray[1].y,
-"END",
-ray[2].x,
-ray[2].y
-)
+	print(
+	"CENTER RAY:",
+	"START",
+	ray[1].x,
+	ray[1].y,
+	"END",
+	ray[2].x,
+	ray[2].y
+	)
 
 --------------------------------------------------
 -- 3. Visualize sensors
