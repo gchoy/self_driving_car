@@ -1,0 +1,130 @@
+local Road = require "scripts.road"
+local Car = require "scripts.car"
+
+function init(self)
+	math.randomseed(os.time())
+
+	self.road = Road.new(480, 540, 3) 
+
+	print("SIM ROAD")
+	print("X:", self.road.x)
+	print("WIDTH:", self.road.width)
+	print("LANES:", self.road.lane_count)
+	print("LEFT:", self.road.left)
+	print("RIGHT:", self.road.right)
+
+	self.player = Car.new(Road.get_lane_center(	self.road, 1),
+		300,
+		30,
+		50,
+		"KEYS"
+	)
+
+	print("=== PLAYER CREATED ===") 
+
+	print(
+	"PLAYER:",
+	self.player.x,
+	self.player.y
+)
+
+print(
+"PLAYER CONTROL:",
+self.player.controls.type
+)
+
+print(
+"PLAYER SENSOR:",
+self.player.sensor ~= nil
+)
+
+print(
+"PLAYER BRAIN:",
+self.player.brain ~= nil
+)
+
+	self.traffic = {
+		Car.new(Road.get_lane_center(self.road, 1),
+			100,
+			30,
+			50,
+			"DUMMY",
+			2
+		)
+	}
+
+	print("=== ============= ===")
+	print("=== TRAFFIC CREATED ===")
+
+	print(
+	"TRAFFIC COUNT:",
+	#self.traffic
+)
+
+print(
+"TRAFFIC POSITION:",
+self.traffic[1].x,
+self.traffic[1].y
+)
+
+print(
+"TRAFFIC CONTROL:",
+self.traffic[1].controls.type
+)
+
+print(
+"TRAFFIC SPEED:",
+self.traffic[1].speed
+)
+
+print(
+"TRAFFIC POLYGON:",
+self.traffic[1].polygon
+)
+
+	print("=== SIMULATION INITIALIZED ===")
+end
+
+
+function update(self, dt)
+
+	if self.traffic[1] then
+		print(
+		"TRAFFIC BEFORE:",
+		self.traffic[1].x,
+		self.traffic[1].y,
+		"SPEED:",
+		self.traffic[1].speed
+	)
+	for _, traffic_car in ipairs(self.traffic) do
+
+		Car.update(
+			traffic_car,
+			self.road.borders,
+			{}
+		)
+	end
+
+	print(
+	"TRAFFIC AFTER:",
+	self.traffic[1].x,
+	self.traffic[1].y,
+	"SPEED:",
+	self.traffic[1].speed
+)
+
+	Car.update(
+		self.player,
+		self.road.borders,
+		self.traffic
+	)
+
+	
+
+	
+end
+end
+
+
+
+
