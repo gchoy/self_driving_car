@@ -42,17 +42,45 @@ print(
 "PLAYER BRAIN:",
 self.player.brain ~= nil
 )
+---- ======== Test for player sensing traffic =======
+for i, reading in ipairs(
+self.player.sensor.readings
+) do
 
+if reading then
+
+	print(
+	"PLAYER SENSOR",
+	i,
+	"DETECTED",
+	reading.x,
+	reading.y,
+	"OFFSET",
+	reading.offset
+)
+
+else
+
+print(
+"PLAYER SENSOR",
+i,
+"NO DETECTION"
+)
+
+end
+
+end
+--======= End of sensing traffic test =====
 	self.traffic = {
 		Car.new(Road.get_lane_center(self.road, 1),
-			100,
+			450,
 			30,
 			50,
 			"DUMMY",
 			2
 		)
 	}
-
+	print("PLAYER DAMAGE:", self.player.damaged)
 	print("=== ============= ===")
 	print("=== TRAFFIC CREATED ===")
 
@@ -96,13 +124,21 @@ function update(self, dt)
 		"SPEED:",
 		self.traffic[1].speed
 	)
-	for _, traffic_car in ipairs(self.traffic) do
+	for i, traffic_car in ipairs(self.traffic) do
 
 		Car.update(
 			traffic_car,
 			self.road.borders,
 			{}
 		)
+		print(
+		"TRAFFIC",
+		i,
+		"POSITION X Y:",
+		traffic_car.x,
+		traffic_car.y
+		)
+	
 	end
 
 	print(
@@ -113,15 +149,66 @@ function update(self, dt)
 	self.traffic[1].speed
 )
 
+print(
+"PLAYER X Y POSITION:",
+self.player.x,
+self.player.y
+)
 	Car.update(
 		self.player,
 		self.road.borders,
 		self.traffic
 	)
 
-	
+	print("=== PLAYER UPDATED ===")
 
-	
+	print(
+	"PLAYER HAS SENSOR:",
+	self.player.sensor ~= nil
+)
+
+print(
+"PLAYER RAY COUNT:",
+self.player.sensor and self.player.sensor.ray_count or -1
+)
+
+print(
+"PLAYER READINGS:",
+self.player.sensor and self.player.sensor.readings ~= nil
+)	
+print("=== SENSOR READINGS ===")
+
+for i = 1, self.player.sensor.ray_count do
+
+	local reading =
+	self.player.sensor.readings[i]
+
+	if reading then
+
+		print(
+		"PLAYER SENSOR",
+		i,
+		"DETECTED",
+		"X:",
+		reading.x,
+		"Y:",
+		reading.y,
+		"OFFSET:",
+		reading.offset
+	)
+
+else
+
+	print(
+	"PLAYER SENSOR",
+	i,
+	"NO DETECTION"
+)
+
+end
+end
+
+--========== end of test print out ===============================	
 end
 end
 
